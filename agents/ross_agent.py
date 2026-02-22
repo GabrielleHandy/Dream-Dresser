@@ -107,10 +107,11 @@ class RossAgent:
                 top_k=top_k,
                 include_metadata=True
             )
-            return results.matches
+            return results.get('matches', []) 
+            
         except Exception as e:
-            logger.error(f"Error finding match: {e}")
-            return None
+            logger.error(f"Monica: 'Clean up on aisle 4! Pinecone error: {e}'")
+            return []
 
 
     def recall_memory(self, vector_id: str) -> Optional[Dict]:
