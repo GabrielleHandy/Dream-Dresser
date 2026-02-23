@@ -65,8 +65,12 @@ def main():
                     item = match['metadata'].get('item_name', 'Unknown Item')
                     vibe = match['metadata'].get('vibe', 'No vibe set')
                     
-                    print(f"{i+1}. {item} ({score}% match)")
+                    is_ok, message = monica.validate_outfit(vibe, item)
+                    
+                    status_emoji = "✅" if is_ok else "⚠️"
+                    print(f"{i+1}. {status_emoji} {item} ({score}% match)")
                     print(f"   Vibe: {vibe}")
+                    print(f"   {message}")
             else:
                 print("\nRoss: 'I couldn't find anything. Maybe it's at the dry cleaners?'")
         elif choice == '3':
