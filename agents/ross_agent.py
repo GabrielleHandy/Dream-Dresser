@@ -72,9 +72,6 @@ class RossAgent:
             logger.error(f"Failed to create index: {e}")
             raise
 
-    # ---------------------------------------------------------
-    # THE 3 CORE DATABASE FUNCTIONS: Store, Search, Recall
-    # ---------------------------------------------------------
 
     def store_memory(self, vector_id: str, vector_values: List[float], metadata: Dict[str, Any] = None) -> bool:
         """Upserts a vector into the database (Creates/Updates)."""
@@ -94,23 +91,30 @@ class RossAgent:
             return False
 
 
-    def find_match(self, search_vector: list, top_k: int = 1):
-        """Ross 'pivots' through the database to find the closest semantic match."""
-        if not self.index:
-            logger.error("Ross isn't awake yet!")
-            return None
+    def find_match(self, search_vector: list, category_filter: str = None, top_k: int = 3):
+        """Search with a verified return path."""
+        query_filter = None
+        
+        if category_filter:
+            query_filter = {
+                "$or": [
+                    {"category": {"$eq": category_filter}},
+                    {"sub_category": {"$eq": category_filter}}
+                ]
+            }
 
-        logger.info("Ross: 'Scanning the museum for a match...'")
         try:
-            results = self.index.query(
+            response = self.index.query(
                 vector=search_vector,
+                filter=query_filter,
                 top_k=top_k,
                 include_metadata=True
             )
-            return results.get('matches', []) 
+            # Senior Move: Always check if matches exist before returning
+            return response.get('matches', [])
             
         except Exception as e:
-            logger.error(f"Monica: 'Clean up on aisle 4! Pinecone error: {e}'")
+            logger.error(f"Ross: 'Pivot! Search failed: {e}'")
             return []
 
 
