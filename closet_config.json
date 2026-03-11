@@ -1,0 +1,15 @@
+{
+    "Shirt": [
+        "T-Shirt",
+        "Blouse"
+    ],
+    "Pants": [
+        "Jeans",
+        "Slacks"
+    ],
+    "Shoes": [
+        "Sneakers",
+        "Boots",
+        "Heels"
+    ]
+}
